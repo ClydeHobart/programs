@@ -5,25 +5,27 @@
 
 BITP = bitPrinting
 HILB = hilbert
+FILE = file
 
 FLAGS = 
-CFLAGS = -Wall -pedantic -std=c11 -ggdb $(FLAGS)
+CFLAGS = -Wall -pedantic -std=c11 $(FLAGS) # -g
 CC = gcc
 MAKE = make
-OBJS = $(BITP).o $(HILB).o
-LIB = libs.a
+OBJS = $(BITP).o $(HILB).o $(FILE).o
+LIBS = libs.a
 
-.PHONY: all clean
+.PHONY: clean
 
-# $(LIB): $(OBJS)
-# 	ar cr $(LIB) $(OBJS)
+$(LIBS): $(OBJS)
+	ar cr $@ $^
+	rm -f *.o
 
-$(HILB): $(HILB).o $(BITP).o
-	$(CC) $(CFLAGS) $^ -o $@ -lm
-
-$(HILB).o: $(BITP).h
+$(HILB).o: $(BITP).h $(HILB).h
+	$(CC) $(CFLAGS) -c -o $@ $(HILB).c -lm
 
 $(BITP).o: $(BITP).h
 
+$(FILE).o: $(FILE).h
+
 clean:
-	rm -f *~ *.o *.dSYM $(BITP) $(HILB)
+	rm -f *.o *.a *~  *.dSYM

@@ -31,7 +31,7 @@ double *hilbertMap(const double fraction)
 	char *fractionBits;	// string for the bits the fraction bits
 		// (adjusted by the proper exponent)
 
-	doubleBits = printBEBits(&fraction, sizeof(double), 1, 1);
+	doubleBits = printBEBits((void *)&fraction, sizeof(double), 1, 1);
 	fractionBits = getFractionBits(doubleBits);
 	pt = NULL;
 
