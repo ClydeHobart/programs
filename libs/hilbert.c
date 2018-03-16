@@ -9,68 +9,61 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <time.h>
 #include "bitPrinting.h"
 
-double *hilbertMap(const char *bits);
-int getExp(const char *doubleBits);
-char *getFractionBits(const char *doubleBits);
+/* **************** global functions ****************
+ * See hilbert.h for function descriptions
+ */
 
-int main()
+/**************** hilbertMap() ****************/
+double *hilbertMap(const double fraction);
+
+/**************** local functions ****************/
+static double *hilbertMapHelp(const char *bits);
+static int getExp(const char *doubleBits);
+static char *getFractionBits(const char *doubleBits);
+
+/**************** hilbertMap() ****************/
+double *hilbertMap(const double fraction)
 {
-	// double testDoubles[4];
-	// int testExps[4];
-	// char *testStrings[4];
+	double *pt;					// double ptr for the coordinates of the hilbert mapping
+	char *doubleBits;		// string for the 64 bits of the double fraction
+	char *fractionBits;	// string for the bits the fraction bits
+		// (adjusted by the proper exponent)
 
-	// testDoubles[0] = 0.045;
-	// testDoubles[1] = 23;
-	// testStrings[0] = printBEBits(testDoubles, sizeof(double), 1, 1);
-	// testStrings[1] = printBEBits(&(testDoubles[1]), sizeof(double), 1, 1);
-	// printf("%s\n%s\n", testStrings[0], testStrings[1]);
-	// testExps[0] = getExp(testStrings[0]);
-	// testExps[1] = getExp(testStrings[1]);
-	// printf("%d\n%d\n", testExps[0], testExps[1]);
+	doubleBits = printBEBits(&fraction, sizeof(double), 1, 1);
+	fractionBits = getFractionBits(doubleBits);
+	pt = NULL;
 
-	// testStrings[2] = getFractionBits(testStrings[0]);
-	// printf("%s\n", testStrings[2]);
-
-	// srand(time(NULL));
-	// for ( int i = 0; i < 40; i++ ) {
-	// 	testDoubles[0] = ((double)rand()) / RAND_MAX;
-	// 	testStrings[0] = printBEBits(testDoubles, sizeof(double), 1, 1);
-	// 	testStrings[1] = getFractionBits(testStrings[0]);
-	// 	printf("%8f | %64s | %d\n", testDoubles[0], testStrings[1], (int)strlen(testStrings[1]));
-	// }
-
-	for ( int i = 0; i < 8; i++ ) {
-		double fraction = ((double)i) / 7;
-		char *doubleBits = printBEBits(&fraction, sizeof(double), 1, 1);
-		char *fractionBits = getFractionBits(doubleBits);
-
-		double *pt = NULL;
-		if ( fractionBits != NULL ) {
-			if ( (int)strlen(fractionBits) % 2 == 1 ) {
-				fractionBits[strlen(fractionBits) - 1] = 0;			}
-
-			pt = hilbertMap(fractionBits);
-		} else {
-			pt = calloc(2, sizeof(double));
-			pt[0] = -1;
-			pt[1] = -1;
+	// check if fractionBits is NULL (the exponent bits are too high)
+	if ( fractionBits != NULL ) {
+		// check if there's an odd amount of fraction bits
+		if ( (int)strlen(fractionBits) % 2 == 1 ) {
+			fractionBits[strlen(fractionBits) - 1] = 0;
 		}
-		printf("%8f -> (%s%8f, %s%8f)\n", fraction, pt[0] >= 
-			0 ? " " : "", pt[0], pt[1] >= 0 ? " " : "", pt[1]);
-		free(pt);
-		if ( fractionBits != NULL ) {
-			free(fractionBits);
-		}
-		free(doubleBits);
+
+		pt = hilbertMapHelp(fractionBits);
+		free(fractionBits);
+	} else {
+		pt = calloc(2, sizeof(double));
+		pt[0] = 1;
+		pt[1] = 0;
 	}
 
-	return 0;
+	free(doubleBits);
+	return pt;
 }
 
-double *hilbertMap(const char *bits)
+/* **************** hilbertMapHelp() ****************
+ * maps a string of fraction bits to a coordinate (x, y), where x and y are in 
+ * [0, 1], on the Hilbert curve
+ *
+ * bits: string of even-numbered fraction bits to find the Hilbert mapping of
+ * return: double ptr to two consecutive doubles for the x and y coordinate
+ *
+ * memory contract: the returned ptr needs to be freed
+ */
+static double *hilbertMapHelp(const char *bits)
 {
 	double *pt, *retPt = calloc(2, sizeof(double));
 
@@ -81,7 +74,7 @@ double *hilbertMap(const char *bits)
 		// printf("\"\" -> (0, 0)\n");
 		return(retPt);
 	} else {
-		pt = hilbertMap(bits + 2);
+		pt = hilbertMapHelp(bits + 2);
 		switch (2 * bits[0] + bits[1] - 144) {
 			case 0:
 				retPt[0] = pt[1] * 0.5;
@@ -106,7 +99,13 @@ double *hilbertMap(const char *bits)
 	}
 }
 
-int getExp(const char *doubleBits)
+/* **************** getExp() ****************
+ * gets an integer of the exponent of the bits of a double
+ *
+ * doubleBits: string of the 64 bits of a double to find the exponent of
+ * return: integer of the exponent of the double, adjusted by 1023
+ */
+static int getExp(const char *doubleBits)
 {
 	int exp = 0;
 	// loop through the exponent bits of the double
@@ -121,7 +120,15 @@ int getExp(const char *doubleBits)
 	return exp;
 }
 
-char *getFractionBits(const char *doubleBits)
+/* **************** getFractionBits() ****************
+ * gets a string of the fraction bits of a double, adjusted by the proper exponent
+ *
+ * doubleBits: string of the 64 bits of a double to find the fraction bits of
+ * return: string of the fraction bits of doubleBits, adjusted by the proper exponent
+ *
+ * memory contract: the retuned ptr needs to be freed
+ */
+static char *getFractionBits(const char *doubleBits)
 {
 	int exp = -1 * getExp(doubleBits);	// exponent of the double
 	int last1 = 11;											// index of last bit that is '1'
@@ -130,9 +137,7 @@ char *getFractionBits(const char *doubleBits)
 
 	// check if exp is < 1
 	if ( exp < 1 ) {
-		fractionBits = calloc(53, 1);
-		strcat(fractionBits, "1111111111111111111111111111111111111111111111111111");
-		return fractionBits;
+		return NULL;
 	}
 
 	// check if exp == 1023 (double was 0)

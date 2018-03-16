@@ -9,45 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef M_PI
-#define M_PI (3.14159265358979323846)
-#endif
-
 char *printBEBits(void *ptr, const int size, const int count, const char retStr);
 char *printLEBits(void *ptr, const int size, const int count, const char retStr);
 void printByte(void *ptr, char *dest);
 void invertBytes(void *ptr, const int count);
-
-// int main()
-// {
-// 	char word[4] = { 0, 1, 2, 3 };
-// 	double *pi = malloc(sizeof(double));
-// 	*pi = M_PI;
-// 	int *num = malloc(sizeof(int));
-// 	*num = 1;
-
-// 	printBEBits(pi, sizeof(double), 1, 0);
-// 	printBEBits(pi, sizeof(double), 1, 0);
-// 	printLEBits(pi, sizeof(double), 1, 0);
-// 	puts("");
-// 	printBEBits(pi, sizeof(double), 1, 0);
-// 	puts("inverting");
-// 	invertBytes(pi, sizeof(double));
-// 	printBEBits(pi, sizeof(double), 1, 0);
-// 	puts("inverting");
-// 	invertBytes(pi, sizeof(double));
-// 	printBEBits(pi, sizeof(double), 1, 0);
-// 	puts("");
-// 	char *piStr = printBEBits(pi, sizeof(double), 1, 1);
-// 	printf("%s\n\n", piStr);
-// 	printBEBits(num, sizeof(int), 1, 0);
-// 	printLEBits(num, sizeof(int), 1, 0);
-// 	printBEBits(word, sizeof(char), 4, 0);
-// 	printLEBits(word, sizeof(char), 4, 0);
-// 	free(pi);
-// 	free(num);
-// 	free(piStr);
-// }
 
 /**************** isBigEndian() ****************/
 char isBigEndian() {

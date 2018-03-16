@@ -1,3 +1,9 @@
+/* bitPrinting.h
+ * A set of functions to do various things regarding bits.
+ *
+ * Zeke Baker | 20180315.2219 | Programs/libs/bitPringint.h
+ */
+
 #ifndef __BIT_PRINTING_H__
 #define __BIT_PRINTING_H__
 
@@ -20,7 +26,7 @@ char isBigEndian();
  * count: const int of count of data type elements to print
  * retStr: const char indicating if a string of bits should be returned
  * return: retStr != NULL ? char ptr of B-E bits : NULL
- * 
+ *
  * memory contract: if retStr isn't NULL, the returned string must be freed
  */
 char *printBEBits(void *ptr, const int size, const int count, const char retStr);
@@ -33,7 +39,7 @@ char *printBEBits(void *ptr, const int size, const int count, const char retStr)
  * count: const int of count of data type elements to print
  * retStr: const char indicating if a string of bits should be returned
  * return: retStr != NULL ? char ptr of L-E bits : NULL
- * 
+ *
  * memory contract: if retStr isn't NULL, the returned string must be freed
  */
 char *printLEBits(void *ptr, const int size, const int count, const char retStr);
