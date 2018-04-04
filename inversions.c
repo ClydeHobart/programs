@@ -23,7 +23,7 @@ arrayCount_t* combineAndCountCrosses(char *P, const int p, char *Q, const int q)
 int main()
 {
 	const char E[] = "Error: ";
-	const char FILE_NAME[] = "pi.txt";
+	const char FILE_NAME[] = "files/pi.txt";
 
 	FILE *fpIn;					// FILE ptr to read from
 	FILE *fpOut;				// FILE ptr to print to
