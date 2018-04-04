@@ -2,4 +2,6 @@
 *.a
 *~
 *.dSYM
+*.out
+*.txt
 terminalRPG

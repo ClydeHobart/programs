@@ -4,6 +4,7 @@
 # Zeke Baker | 20180316.1554 
 
 FTS = fracToSphere
+INV = inversions
 
 L = libs
 
@@ -15,7 +16,7 @@ LIBS = $L/$L.a
 
 .PHONY: all clean
 
-all: $(LIBS) $(FTS)
+all: $(LIBS) $(FTS) $(INV)
 
 $(LIBS):
 	$(MAKE) -C $L
@@ -23,6 +24,9 @@ $(LIBS):
 $(FTS): $(FTS).c $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 
+$(INV): $(INV).c $(LIBS)
+	$(CC) $(CFLAGS) $^ -o $@
+
 clean:
-	rm -f *.o *~ *.dSYM $(FTS)
+	rm -f *.o *~ *.dSYM $(FTS) $(INV)
 	$(MAKE) -C $L clean
