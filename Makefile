@@ -5,18 +5,22 @@
 
 FTS = fracToSphere
 INV = inversions
+KMP = karatMultPoly
+SQS = squareSummable
+
+ALL = $(FTS) $(INV) $(KMP) $(SQS)
 
 L = libs
 
 FLAGS =
-CFLAGS = -Wall -pedantic -std=c11 $(FLAGS) # -g
+CFLAGS = -Wall -pedantic -std=c11 $(FLAGS) -g
 CC = gcc
 MAKE = make
 LIBS = $L/$L.a
 
 .PHONY: all clean
 
-all: $(LIBS) $(FTS) $(INV)
+all: $(LIBS) $(ALL)
 
 $(LIBS):
 	$(MAKE) -C $L
@@ -27,6 +31,12 @@ $(FTS): $(FTS).c $(LIBS)
 $(INV): $(INV).c $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@
 
+$(KMP): $(KMP).c
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(SQS): $(SQS).c
+	$(CC) $(CFLAGS) $^ -o $@ -lm
+
 clean:
-	rm -f *.o *~ *.dSYM $(FTS) $(INV)
+	rm -f *.o *~ *.dSYM $(ALL)
 	$(MAKE) -C $L clean
