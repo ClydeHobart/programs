@@ -7,8 +7,9 @@ FTS = fracToSphere
 INV = inversions
 KMP = karatMultPoly
 SQS = squareSummable
+LIS = longIncSubseq
 
-ALL = $(FTS) $(INV) $(KMP) $(SQS)
+ALL = $(FTS) $(INV) $(KMP) $(SQS) $(LIS)
 
 L = libs
 
@@ -36,6 +37,9 @@ $(KMP): $(KMP).c
 
 $(SQS): $(SQS).c
 	$(CC) $(CFLAGS) $^ -o $@ -lm
+
+$(LIS): $(LIS).c $(LIBS)
+	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
 	rm -f *.o *~ *.dSYM $(ALL)

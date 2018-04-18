@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-#include <time.h>
 
 bool isSquareSummable(const int B);
 
@@ -19,14 +18,15 @@ int main()
 	isSquareSummable(8);
 	isSquareSummable(73);
 	isSquareSummable(99);
+
+	isSquareSummable(129);
+
 	isSquareSummable(200);
 	isSquareSummable(1000);
-	// srand(time(NULL));
-	// isSquareSummable((int)((double)rand() / RAND_MAX * 32767));
 }
 
 
-/* **************** isSquareSummable ****************
+/* **************** isSquareSummable() ****************
  * prints out the number of square-summable numbers from 1 to B, also prints
  * out list of these square-summable numbers and which squares add up to B, if
  * B <= 100 and B is square-summable (otherwise it prints a statment stating
@@ -82,18 +82,13 @@ bool isSquareSummable(const int B)
 		}
 	}
 
-	printf("Number of square-summable numbers between 1 and %d: %d (diff = %d)\n\n", B, count, B - count);
+	printf("Number of square-summable numbers between 1 and %d: %d\n\n", B, count);
 
-	// check if a recovery is necessary
-	if ( !F[n][B] ) {
-		printf("%d isn't square-summable.\n\n", B);
-		return false;
-	}
-
-	// check if B is too large to be worth recovering S
-	if ( B > 100 ) {
-		printf("%d is square-summable, but it's too large to be worth recovering.\n\n", B);
-		return true;
+	// check if B is too large to be worth doing large printing
+	if ( B > 129 ) {
+		printf("%d is%s square-summable%s.\n\n", B, F[n][B] ? "" : "n't", F[n][B] ?
+			", but it's too large to be worth recovering" : "");
+		return F[n][B];
 	}
 
 	firstPrint = true;
@@ -102,7 +97,7 @@ bool isSquareSummable(const int B)
 	for ( b = 1; b <= B; b++ ) {
 		if ( iSS[b] ) {
 			if ( firstPrint ) {
-				printf("{%d", b);
+				printf("Set of numbers from 1 to %d that are square-summable:\n{%d", B, b);
 				firstPrint = false;
 			} else {
 				printf(", %d", b);
@@ -111,6 +106,27 @@ bool isSquareSummable(const int B)
 	}
 
 	puts("}\n");
+	firstPrint = true;
+
+	// print out all numbers from 1 to B that aren't square-summable
+	for ( b = 1; b <= B; b++ ) {
+		if ( !iSS[b] ) {
+			if ( firstPrint ) {
+				printf("Set of numbers from 1 to %d that aren't square-summable:\n{%d", B, b);
+				firstPrint = false;
+			} else {
+				printf(", %d", b);
+			}
+		}
+	}
+
+	puts("}\n");
+
+	// check if a recovery is necessary
+	if ( !F[n][B] ) {
+		printf("%d isn't square-summable.\n\n", B);
+		return false;
+	}
 
 	// ensure all of S is false
 	for ( m = 0; m <= n; m++ ) {
