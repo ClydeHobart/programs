@@ -4,13 +4,8 @@
 # Zeke Baker | 20180316.1554 
 
 FTS = fracToSphere
-INV = inversions
-KMP = karatMultPoly
-SQS = squareSummable
-LIS = longIncSubseq
-PS4 = ps4
 
-ALL = $(FTS) $(INV) $(KMP) $(SQS) $(LIS) $(PS4)
+ALL = $(FTS)
 
 L = libs
 
@@ -29,21 +24,6 @@ $(LIBS):
 
 $(FTS): $(FTS).c $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ -lm
-
-$(INV): $(INV).c $(LIBS)
-	$(CC) $(CFLAGS) $^ -o $@
-
-$(KMP): $(KMP).c
-	$(CC) $(CFLAGS) $^ -o $@
-
-$(SQS): $(SQS).c
-	$(CC) $(CFLAGS) $^ -o $@ -lm
-
-$(LIS): $(LIS).c $(LIBS)
-	$(CC) $(CFLAGS) $^ -o $@
-
-$(PS4): $(PS4).c
-	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
 	rm -f *.o *~ *.dSYM $(ALL)
