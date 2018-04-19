@@ -8,8 +8,9 @@ INV = inversions
 KMP = karatMultPoly
 SQS = squareSummable
 LIS = longIncSubseq
+PS4 = ps4
 
-ALL = $(FTS) $(INV) $(KMP) $(SQS) $(LIS)
+ALL = $(FTS) $(INV) $(KMP) $(SQS) $(LIS) $(PS4)
 
 L = libs
 
@@ -39,6 +40,9 @@ $(SQS): $(SQS).c
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 
 $(LIS): $(LIS).c $(LIBS)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(PS4): $(PS4).c
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
